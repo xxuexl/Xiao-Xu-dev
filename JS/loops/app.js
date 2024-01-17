@@ -33,6 +33,11 @@ const alumns = [
   { name: "Alfredo Blanco", T1: false, T2: false, T3: false },
   { name: "Raquel Benito", T1: true, T2: true, T3: true },
 ];
+/*WORKING ON THIS ONE, IT´S FREAKING HARD.
+alumns.forEach((alumns) => {});
+
+alumns.isApproved = true;
+console.log(alumns);
 
 //?-----------------------------------------------------------------------------------------------------
 /**Iteración #3: Probando For...of*** 
@@ -119,7 +124,13 @@ const toys = [
   { id: 40, name: "El gato con Guantes" },
   { id: 40, name: "El gato felix" },
 ];
-
+const sinGato = [];
+for (const toy of toys) {
+  if (!toy.name.includes("gato")) {
+    sinGato.push(toy);
+  }
+}
+console.log(sinGato);
 //?------------------------------------------------------------------------------------------------------
 /* Iteración #7: For...of avanzado
 Usa un bucle for...of para recorrer todos los juguetes y añade los que tengan más 
@@ -135,3 +146,10 @@ const Juguetes = [
   { id: 40, name: "El gato con Guantes", sellCount: 8 },
   { id: 40, name: "El gato felix", sellCount: 35 },
 ];
+
+for (const populares of Juguetes) {
+  if (populares.sellCount > 15) {
+    popularJuguetes.push(populares);
+  }
+}
+console.log(popularJuguetes);
