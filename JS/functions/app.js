@@ -136,10 +136,16 @@ const duplicates = [
   "pasta",
   "soda",
 ];
-function removeDuplicates(param) {
-  // insert code
-}
+const newFoods = [];
+duplicates.forEach((item) => {
+  if (!newFoods.includes(item)) {
+    newFoods.push(item);
+  }
+});
+console.log(newFoods);
 
+/* Se emplea "!" para convertirlo en negativo o lo contrario a ese statement. 
+Con el método "includes" comprobamos si incluye dicho item. */
 //?--------------------------------------------------------------------------------------------------
 /**Iteración #7: Buscador de nombres**
 
