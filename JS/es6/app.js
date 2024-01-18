@@ -85,5 +85,124 @@ console.log(`The name of this car is ${name}, and the itv is ${itv}.`);
 console.log(itvYear, itvYear2, itvYear3);
 
 //?-------------------------------------------------------------------------------------------------------
+/**Iteración #3: Spread Operator**
+
+3.1 Dado el siguiente array, crea una copia usando spread operators.*/
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 3.1:");
+
+const puntosLista = [32, 54, 21, 64, 75, 43];
+
+const puntosListaCopia = [...puntosLista];
+console.log(puntosListaCopia);
 
 //?-------------------------------------------------------------------------------------------------------
+//3.2 Dado el siguiente objeto, crea una copia usando spread operators.
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 3.2:");
+
+const toy = { name: "Bus laiyiar", date: "20-30-1995", color: "multicolor" };
+const toyCopia = { ...toy };
+console.log(toyCopia);
+
+//?-------------------------------------------------------------------------------------------------------
+//3.3 Dado los siguientes arrays, crea un nuevo array juntandolos usando spread operatos.
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 3.3:");
+
+const pointsList = [32, 54, 21, 64, 75, 43];
+const pointsLis2 = [54, 87, 99, 65, 32];
+
+const pointsListCopy = [...pointsList];
+const pointsList2Copy = [...pointsLis2];
+const allPointsList = [...pointsListCopy, ...pointsList2Copy];
+console.log(allPointsList);
+
+//?-------------------------------------------------------------------------------------------------------
+/*3.4 Dado los siguientes objetos. Crea un nuevo objeto fusionando los dos
+con spread operators.*/
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 3.4:");
+
+const toys = { name: "Bus laiyiar", date: "20-30-1995", color: "multicolor" };
+const toysUpdate = {
+  lights: "rgb",
+  power: ["Volar like a dragon", "MoonWalk"],
+};
+
+const toysCopy = { ...toys };
+const toysUpdateCopy = { ...toysUpdate };
+const toysUpdated = { ...toysCopy, ...toysUpdateCopy };
+console.log(toysUpdated);
+//?-------------------------------------------------------------------------------------------------------
+/*3.5 Dado el siguiente array. Crear una copia de él eliminando la posición 2
+pero sin editar el array inicial. De nuevo, usando spread operators.*/
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 3.5:");
+
+const colors = ["rojo", "azul", "amarillo", "verde", "naranja"];
+
+const colorsCopy = [...colors.slice(0, 2), ...colors.slice(3)];
+console.log(colorsCopy);
+
+//?-------------------------------------------------------------------------------------------------------
+/**Iteración #4: Map**
+
+4.1 Dado el siguiente array, devuelve un array con sus nombres
+utilizando .map(). */
+//?-------------------------------------------------------------------------------------------------------
+console.log("Task 4.1:");
+
+const users = [
+  { id: 1, name: "Abel" },
+  { id: 2, name: "Julia" },
+  { id: 3, name: "Pedro" },
+  { id: 4, name: "Amanda" },
+];
+
+//?-------------------------------------------------------------------------------------------------------
+/*4.2 Dado el siguiente array, devuelve una lista que contenga los valores
+de la propiedad .name y cambia el nombre a 'Anacleto' en caso de que
+empiece por 'A'.*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 4.2:");
+
+const users1 = [
+  { id: 1, name: "Abel" },
+  { id: 2, name: "Julia" },
+  { id: 3, name: "Pedro" },
+  { id: 4, name: "Amanda" },
+];
+
+//?---------------------------------------------------------------------------------------------------
+/*4.3 Dado el siguiente array, devuelve una lista que contenga los valores
+de la propiedad .name y añade al valor de .name el string ' (Visitado)'
+cuando el valor de la propiedad isVisited = true.*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 4.3:");
+
+const cities = [
+  { isVisited: true, name: "Tokyo" },
+  { isVisited: false, name: "Madagascar" },
+  { isVisited: true, name: "Amsterdam" },
+  { isVisited: false, name: "Seul" },
+];
+
+//?---------------------------------------------------------------------------------------------------
+/**Iteración #5: Filter**
+
+5.1 Dado el siguiente array, utiliza .filter() para generar un nuevo array
+con los valores que sean mayor que 18: */
+
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 5.1:");
+
+const ages = [22, 14, 24, 55, 65, 21, 12, 13, 90];
+
+//?---------------------------------------------------------------------------------------------------
+/*5.2 Dado el siguiente array, utiliza .filter() para generar un nuevo array
+con los valores que sean par.*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 5.2:");
+
+const agess = [22, 14, 24, 55, 65, 21, 12, 13, 90];
