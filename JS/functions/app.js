@@ -147,6 +147,8 @@ Crea una función que reciba por parámetro un array y el valor que desea compro
 comprueba si existe el elemento, en caso que existan nos devuelve un true y la posición de dicho elemento y por la contra un false. 
 Puedes usar este array para probar tu función:*/
 //?---------------------------------------------------------------------------------------------------
+console.log("Task 1.7:");
+
 const nameFinder = [
   "Peter",
   "Steve",
@@ -161,5 +163,30 @@ const nameFinder = [
   "Marc",
 ];
 function finderName(param) {
+  // insert code
+}
+
+//?---------------------------------------------------------------------------------------------------
+/**Iteration #8: Contador de repeticiones**
+
+Crea una función que nos devuelva el número de veces que se repite cada una de las palabras que lo conforma.
+ Puedes usar este array para probar tu función:*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 1.8:");
+
+const counterWords = [
+  "code",
+  "repeat",
+  "eat",
+  "sleep",
+  "code",
+  "enjoy",
+  "sleep",
+  "code",
+  "enjoy",
+  "upgrade",
+  "code",
+];
+function repeatCounter(param) {
   // insert code
 }
