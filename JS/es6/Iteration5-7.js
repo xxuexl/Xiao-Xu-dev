@@ -26,6 +26,7 @@ console.log(pairNumbers);
 con los streamers que tengan el gameMorePlayed = 'League of Legends'.*/
 
 //?---------------------------------------------------------------------------------------------------
+console.log("Task 5.3:");
 
 const streamers = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
@@ -42,6 +43,7 @@ console.log(streamersLeague);
 con los streamers que incluyan el caracter 'u' en su propiedad .name. Recomendamos
 usar la funcion .includes() para la comprobación.*/
 //?---------------------------------------------------------------------------------------------------
+console.log("Task 5.4:");
 
 const streamers2 = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
@@ -60,13 +62,15 @@ el caracter 'Legends' en su propiedad .gameMorePlayed. Recomendamos usar la func
 Además, pon el valor de la propiedad .gameMorePlayed a MAYUSCULAS cuando
 .age sea mayor que 35.*/
 //?---------------------------------------------------------------------------------------------------
+console.log("Task 5.5:");
 
+//?---------------------------------------------------------------------------------------------------
 /*5.6 Dado el siguiente html y javascript, utiliza .filter() para mostrar por consola
 los streamers que incluyan la palabra introducida en el input. De esta forma, si
 introduzco 'Ru' me deberia de mostrar solo el streamer 'Rubius'. Si
 introduzco 'i', me deberia de mostrar el streamer 'Rubius' e 'Ibai'.*/
 //?---------------------------------------------------------------------------------------------------
-
+// TODAVÍA NO
 const streamers3 = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
   { name: "Ibai", age: 25, gameMorePlayed: "League of Legends" },
@@ -95,6 +99,8 @@ introduzco 'Ru' me deberia de mostrar solo el streamer 'Rubius'. Si introduzco '
 me deberia de mostrar el streamer 'Rubius' e 'Ibai'.
 En este caso, muestra solo los streamers filtrados cuando hagamos click en el button.*/
 //?---------------------------------------------------------------------------------------------------
+// TODAVÍA NO
+
 const streamers4 = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
   { name: "Ibai", age: 25, gameMorePlayed: "League of Legends" },
