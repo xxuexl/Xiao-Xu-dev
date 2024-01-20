@@ -8,6 +8,8 @@ con los valores que sean mayor que 18: */
 console.log("Task 5.1:");
 
 const ages = [22, 14, 24, 55, 65, 21, 12, 13, 90];
+const biggerAges = ages.filter((ages) => ages > 18);
+console.log(biggerAges);
 
 //?---------------------------------------------------------------------------------------------------
 /*5.2 Dado el siguiente array, utiliza .filter() para generar un nuevo array
@@ -16,6 +18,8 @@ con los valores que sean par.*/
 console.log("Task 5.2:");
 
 const agess = [22, 14, 24, 55, 65, 21, 12, 13, 90];
+const pairNumbers = agess.filter((agess) => agess % 2 === 0);
+console.log(pairNumbers);
 
 //?---------------------------------------------------------------------------------------------------
 /*5.3 Dado el siguiente array, utiliza .filter() para generar un nuevo array
@@ -29,7 +33,10 @@ const streamers = [
   { name: "Reven", age: 43, gameMorePlayed: "League of Legends" },
   { name: "AuronPlay", age: 33, gameMorePlayed: "Among Us" },
 ];
-
+const streamersLeague = streamers.filter(
+  (streamers) => streamers.gameMorePlayed === "League of Legends"
+);
+console.log(streamersLeague);
 //?---------------------------------------------------------------------------------------------------
 /*5.4 Dado el siguiente array, utiliza .filter() para generar un nuevo array
 con los streamers que incluyan el caracter 'u' en su propiedad .name. Recomendamos
@@ -42,7 +49,10 @@ const streamers2 = [
   { name: "Reven", age: 43, gameMorePlayed: "League of Legends" },
   { name: "AuronPlay", age: 33, gameMorePlayed: "Among Us" },
 ];
-
+const streamers2U = streamers2.filter((streamers2) =>
+  streamers2.name.includes("u")
+);
+console.log(streamers2U);
 //?---------------------------------------------------------------------------------------------------
 /*5.5 utiliza .filter() para generar un nuevo array con los streamers que incluyan
 el caracter 'Legends' en su propiedad .gameMorePlayed. Recomendamos usar la funcion

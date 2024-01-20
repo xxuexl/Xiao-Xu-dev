@@ -160,6 +160,9 @@ const users = [
   { id: 4, name: "Amanda" },
 ];
 
+const usernames = users.map((users) => users.name);
+console.log(usernames);
+
 //?-------------------------------------------------------------------------------------------------------
 /*4.2 Dado el siguiente array, devuelve una lista que contenga los valores
 de la propiedad .name y cambia el nombre a 'Anacleto' en caso de que
@@ -173,7 +176,12 @@ const users1 = [
   { id: 3, name: "Pedro" },
   { id: 4, name: "Amanda" },
 ];
-
+const userANames = users1.map((usersA) => {
+  if (usersA.startsWith("A")) {
+    return "Anacleto";
+  }
+  return usersA;
+});
 //?---------------------------------------------------------------------------------------------------
 /*4.3 Dado el siguiente array, devuelve una lista que contenga los valores
 de la propiedad .name y añade al valor de .name el string ' (Visitado)'
