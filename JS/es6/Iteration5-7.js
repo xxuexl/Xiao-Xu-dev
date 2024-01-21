@@ -200,11 +200,15 @@ console.log(examsSum);
 alumnos que esten aprobados usando la función .reduce().*/
 //?---------------------------------------------------------------------------------------------------
 console.log("Task 7.2:");
+// TODAVIA NO
 //?---------------------------------------------------------------------------------------------------
 //7.3 Dado el mismo array, haz la media de las notas de todos los examenes .reduce().
 //?---------------------------------------------------------------------------------------------------
 console.log("Task 7.3:");
 
+const averageExam =
+  exams.reduce((acc, exam) => acc + exam.score, 0) / exams.length;
+console.log(averageExam);
 //?---------------------------------------------------------------------------------------------------
 /**Iteración #8: Bonus**
 
