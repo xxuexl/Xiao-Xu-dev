@@ -63,6 +63,7 @@ Además, pon el valor de la propiedad .gameMorePlayed a MAYUSCULAS cuando
 .age sea mayor que 35.*/
 //?---------------------------------------------------------------------------------------------------
 console.log("Task 5.5:");
+/* TODAVÍA NO
 
 //?---------------------------------------------------------------------------------------------------
 /*5.6 Dado el siguiente html y javascript, utiliza .filter() para mostrar por consola
@@ -70,7 +71,7 @@ los streamers que incluyan la palabra introducida en el input. De esta forma, si
 introduzco 'Ru' me deberia de mostrar solo el streamer 'Rubius'. Si
 introduzco 'i', me deberia de mostrar el streamer 'Rubius' e 'Ibai'.*/
 //?---------------------------------------------------------------------------------------------------
-// TODAVÍA NO
+/* TODAVÍA NO
 const streamers3 = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
   { name: "Ibai", age: 25, gameMorePlayed: "League of Legends" },
@@ -99,7 +100,7 @@ introduzco 'Ru' me deberia de mostrar solo el streamer 'Rubius'. Si introduzco '
 me deberia de mostrar el streamer 'Rubius' e 'Ibai'.
 En este caso, muestra solo los streamers filtrados cuando hagamos click en el button.*/
 //?---------------------------------------------------------------------------------------------------
-// TODAVÍA NO
+/* TODAVÍA NO
 
 const streamers4 = [
   { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
@@ -128,6 +129,9 @@ const streamers4 = [
 console.log("Task 6.1:");
 
 const numbers = [32, 21, 63, 95, 100, 67, 43];
+
+const hundred = numbers.find((number) => number === 100);
+console.log(hundred);
 //?---------------------------------------------------------------------------------------------------
 //6.2 Dado el siguiente array, usa .find() para econtrar la pelicula del año 2010.
 //?---------------------------------------------------------------------------------------------------
@@ -138,6 +142,8 @@ const movies = [
   { title: "Your Name", stars: 5, date: 2016 },
 ];
 
+const movie2010 = movies.find((movie) => movie.date === 2010);
+console.log(movie2010);
 //?---------------------------------------------------------------------------------------------------
 /*6.3 Dado el siguiente javascript, usa .find() para econtrar el alien de nombre
 'Cucushumushu' y la mutación 'Porompompero'. Una vez que los encuentres, usa
@@ -166,7 +172,7 @@ const mutations = [
     description: "Invoca a un señor mayor como Personal Trainer",
   },
 ];
-
+/* TODAVÍA NO
 //?---------------------------------------------------------------------------------------------------
 //**Iteración #7: Reduce**
 /*7.1 Dado el siguiente array, haz una suma de todos las notas de los examenes de
@@ -187,6 +193,8 @@ const exams = [
   { name: "Keanu Reeves", score: 10 },
 ];
 
+const examsSum = exams.reduce((acc, exam) => acc + exam.score, 0);
+console.log(examsSum);
 //?---------------------------------------------------------------------------------------------------
 /*7.2 Dado el mismo array, haz una suma de todos las notas de los examenes de los
 alumnos que esten aprobados usando la función .reduce().*/
