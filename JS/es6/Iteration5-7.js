@@ -123,7 +123,97 @@ const streamers4 = [
 </html>*/
 
 //?---------------------------------------------------------------------------------------------------
+//6.1 Dado el siguiente array, usa .find() para econtrar el número 100.
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 6.1:");
+
+const numbers = [32, 21, 63, 95, 100, 67, 43];
+//?---------------------------------------------------------------------------------------------------
+//6.2 Dado el siguiente array, usa .find() para econtrar la pelicula del año 2010.
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 6.2:");
+const movies = [
+  { title: "Madagascar", stars: 4.5, date: 2015 },
+  { title: "Origen", stars: 5, date: 2010 },
+  { title: "Your Name", stars: 5, date: 2016 },
+];
 
 //?---------------------------------------------------------------------------------------------------
+/*6.3 Dado el siguiente javascript, usa .find() para econtrar el alien de nombre
+'Cucushumushu' y la mutación 'Porompompero'. Una vez que los encuentres, usa
+spread operator para fusionarlos teniendo en cuenta que el objeto de la mutación
+lo queremos meter en la propiedad .mutation del objeto fusionado.*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 6.3:");
+
+const aliens = [
+  { name: "Zalamero", planet: "Eden", age: 4029 },
+  { name: "Paktu", planet: "Andromeda", age: 32 },
+  { name: "Cucushumushu", planet: "Marte", age: 503021 },
+];
+const mutations = [
+  {
+    name: "Porompompero",
+    description:
+      "Hace que el alien pueda adquirir la habilidad de tocar el tambor",
+  },
+  {
+    name: "Fly me to the moon",
+    description: "Permite volar, solo y exclusivamente a la luna",
+  },
+  {
+    name: "Andando que es gerundio",
+    description: "Invoca a un señor mayor como Personal Trainer",
+  },
+];
 
 //?---------------------------------------------------------------------------------------------------
+//**Iteración #7: Reduce**
+/*7.1 Dado el siguiente array, haz una suma de todos las notas de los examenes de
+los alumnos usando la función .reduce().*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 7.1:");
+
+const exams = [
+  { name: "Yuyu Cabeza Crack", score: 5 },
+  { name: "Maria Aranda Jimenez", score: 1 },
+  { name: "Cristóbal Martínez Lorenzo", score: 6 },
+  { name: "Mercedez Regrera Brito", score: 7 },
+  { name: "Pamela Anderson", score: 3 },
+  { name: "Enrique Perez Lijó", score: 6 },
+  { name: "Pedro Benitez Pacheco", score: 8 },
+  { name: "Ayumi Hamasaki", score: 4 },
+  { name: "Robert Kiyosaki", score: 2 },
+  { name: "Keanu Reeves", score: 10 },
+];
+
+//?---------------------------------------------------------------------------------------------------
+/*7.2 Dado el mismo array, haz una suma de todos las notas de los examenes de los
+alumnos que esten aprobados usando la función .reduce().*/
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 7.2:");
+//?---------------------------------------------------------------------------------------------------
+//7.3 Dado el mismo array, haz la media de las notas de todos los examenes .reduce().
+//?---------------------------------------------------------------------------------------------------
+console.log("Task 7.3:");
+
+//?---------------------------------------------------------------------------------------------------
+/**Iteración #8: Bonus**
+
+6.1 Dado el siguiente javascript filtra los videojuegos por gender = 'RPG' usando
+.filter() y usa .reduce() para conseguir la media de sus .score.
+La función .find() también podría ayudarte para el contrar el genero 'RPG' en el
+array .gender.*/
+//?---------------------------------------------------------------------------------------------------
+const videogames = [
+  { name: "Final Fantasy VII", genders: ["RPG"], score: 9.5 },
+  { name: "Assasins Creed Valhala", genders: ["Aventura", "RPG"], score: 4.5 },
+  { name: "The last of Us 2", genders: ["Acción", "Aventura"], score: 9.8 },
+  { name: "Super Mario Bros", genders: ["Plataforma"], score: 8.5 },
+  { name: "Genshin Impact", genders: ["RPG", "Aventura"], score: 7.5 },
+  {
+    name: "Legend of Zelda: Breath of the wild",
+    genders: ["RPG", "La cosa más puto bonita que he visto nunca"],
+    score: 10,
+  },
+];
