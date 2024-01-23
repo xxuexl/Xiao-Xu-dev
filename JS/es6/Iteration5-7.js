@@ -63,7 +63,24 @@ Además, pon el valor de la propiedad .gameMorePlayed a MAYUSCULAS cuando
 .age sea mayor que 35.*/
 //?---------------------------------------------------------------------------------------------------
 console.log("Task 5.5:");
-/* TODAVÍA NO
+const streamers3 = [
+  { name: "Rubius", age: 32, gameMorePlayed: "Minecraft" },
+  { name: "Ibai", age: 25, gameMorePlayed: "League of Legends" },
+  { name: "Reven", age: 43, gameMorePlayed: "League of Legends" },
+  { name: "AuronPlay", age: 33, gameMorePlayed: "Among Us" },
+];
+
+const legends = streamers3.filter((streamers3) =>
+  streamers3.gameMorePlayed.includes("Legends")
+);
+
+const streamersYear = legends.map((legends) => {
+  if (legends.age > 35) {
+    legends.gameMorePlayed = legends.gameMorePlayed.toUpperCase();
+  }
+  return legends;
+});
+console.log(streamersYear);
 
 //?---------------------------------------------------------------------------------------------------
 /*5.6 Dado el siguiente html y javascript, utiliza .filter() para mostrar por consola
@@ -172,7 +189,18 @@ const mutations = [
     description: "Invoca a un señor mayor como Personal Trainer",
   },
 ];
-/* TODAVÍA NO
+
+const cucu = aliens.find((alien) => alien.name === "Cucushumushu");
+console.log(cucu);
+
+const findMutation = mutations.find(
+  (mutation) => mutation.name === "Porompompero"
+);
+console.log(findMutation);
+
+console.log("Task 6.3part2:");
+const fusionAlien = { ...cucu, mutation: findMutation };
+console.log(fusionAlien);
 //?---------------------------------------------------------------------------------------------------
 //**Iteración #7: Reduce**
 /*7.1 Dado el siguiente array, haz una suma de todos las notas de los examenes de
