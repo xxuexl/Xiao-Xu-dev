@@ -81,7 +81,7 @@ function average(array) {
     return 0;
   }
   const suma = array.reduce((acc, value) => acc + value, 0);
-  const prom = suma / array.length;
+  const prom = suma / array.leng;
   return prom;
 }
 

@@ -197,3 +197,5 @@ const cities = [
   { isVisited: true, name: "Amsterdam" },
   { isVisited: false, name: "Seul" },
 ];
+
+//ESTOY CON ELLO
