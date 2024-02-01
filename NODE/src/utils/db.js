@@ -16,18 +16,20 @@ const MONGO_URI = process.env.MONGO_URI;
 
 const connect = async () => {
   try {
+    //si no hay error de conexión
     const db = await mongoose.connect(MONGO_URI);
 
     // AHORA NOS VAMOS A TRAER EL HOST  y el NAME  de la DB --
 
     const { name, host } = db.connection;
+    //Con un destructuring sacamos name y host
 
     console.log(
       `Conectada la DB 👌  en el host: ${host} con el nombre: ${name}`
     );
   } catch (error) {
     console.log("No se ha conectado la db❌", error.message);
-  }
+  } //si hay error en conexión
 };
 
 module.exports = { connect };
