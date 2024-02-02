@@ -12,6 +12,8 @@ const randomCode = require("../../utils/randomCode");
 const nodemailer = require("nodemailer");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
+const dotenv = require("dotenv");
+dotenv.config();
 
 /**+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
  * +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,20 +58,57 @@ const registerLargo = async (req, res, next) => {
     if (!userExist) {
       //! -----USER NO EXISTE--------LO REGISTRAMOS PORQUE NO HAY COINCIDENCIAS CON UN USER INTERNO
       const newUser = new User({ ...req.body, confirmationCode });
+      //Ya tenemos el _id del user
+      //Tiene que aparecer lo que requiere el modelo. Ej: En name se pone name.
       // Spread operator, los datos que necesito para crear el nuevo usuario.
       // EL USER HA METIDO IMAGEN ???
       if (req.file) {
-        newUser.image = req.file.path;
+        newUser.image = req.file.path; //path: url de Cloudinary, subido previamente a traves del middleware
       } else {
         newUser.image = "https://pic.onlinewebfonts.com/svg/img_181369.png";
-      } //Si no tiene img, ponemos esta img
+      } //Si no tiene img, ponemos esta img por defecto
 
       //! SI HAY UNA NUEVA ASINCRONIA DE CREAR O ACTUALIZAR HAY QUE METER OTRO TRY CATCH
       try {
         const userSave =
-          await newUser.save(); /* Cogemos lo que hemos creado,y lo guardamos. Le hago una nueva
-        constante a ese guardado*/
-        return res.status(200).json({ data: userSave });
+          await newUser.save(); /* Cogemos lo que hemos creado,y lo sube y guarda. Le hago una nueva
+        constante a ese guardado.*/
+        //---> ENVIAR EL CÓDIGO CON NODEMAILER, SE ENVIA AL USER EL CONFIRMATION CODE.
+        if (userSave) {
+          // ---------------------------> ENVIAR EL CODIGO CON NODEMAILER --------------------
+          const emailEnv = process.env.EMAIL;
+          const password = process.env.PASSWORD;
+
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: emailEnv,
+              pass: password,
+            },
+          });
+
+          const mailOptions = {
+            from: emailEnv,
+            to: email,
+            subject: "Confirmation code",
+            text: `tu codigo es ${confirmationCode}, gracias por confiar en nosotros ${name}`,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+              return res.status(404).json({
+                user: userSave,
+                confirmationCode: "error, resend code",
+              });
+            }
+            console.log("Email sent: " + info.response);
+            return res.status(200).json({
+              user: userSave,
+              confirmationCode,
+            });
+          });
+        }
       } catch (error) {
         return res.status(404).json(error.message);
       }

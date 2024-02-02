@@ -1,0 +1,5 @@
+/* La funcion de get devuelve el estado actualmente
+
+
+
+Las exportamos. El objeto tal cual no se exporta. Se exportan sus funciones*/
