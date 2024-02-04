@@ -10,7 +10,7 @@ const User = require("../models/User.model");
 //! ---------------------------- utils ----------------------------------
 const randomCode = require("../../utils/randomCode");
 const sendEmail = require("../../utils/sendEmail");
-
+const { generateToken } = require("../../utils/token");
 //! ------------------------------librerias--------------------------------
 //Vamos a utilizar librerias: Validator, Nodemeailer par mandar correo electrónicos y bcrypt:
 
@@ -252,9 +252,11 @@ const registerWithRedirect = async (req, res, next) => {
         const PORT = process.env.PORT;
         if (userSave) {
           return res.redirect(
-            307,
+            307, //No hay cambio de método. Método más compatible.
             `http://localhost:${PORT}/api/v1/users/register/sendMail/${userSave._id}`
           );
+
+          /*Esta Url he de configurarla yo. Esta ruta me llevará a la const de "sendCode"*/
         }
       } catch (error) {
         return res.status(404).json(error.message);
@@ -272,7 +274,7 @@ const registerWithRedirect = async (req, res, next) => {
 };
 
 //! -----------------------------------------------------------------------------
-//? ------------------CONTRALADORES QUE PUEDEN SER REDIRECT --------------------
+//? ------------------CONTROLADORES QUE PUEDEN SER REDIRECT --------------------
 //! ----------------------------------------------------------------------------
 
 //!!! esto quiere decir que o bien tienen entidad propia porque se llaman por si mismos por parte del cliente
@@ -280,17 +282,21 @@ const registerWithRedirect = async (req, res, next) => {
 
 const sendCode = async (req, res, next) => {
   try {
-    /// sacamos el param que hemos recibido por la ruta
-    /// recuerda la ruta: http://localhost:${PORT}/api/v1/users/register/sendMail/${userSave._id}
+    /* Se hace un destructuring de "id". Se saca el param que hemos recibido por la ruta:
+    La ruta: http://localhost:${PORT}/api/v1/users/register/sendMail/${userSave._id} */
+
     const { id } = req.params;
 
-    /// VAMOS A BUSCAR EL USER POR ID para tener el email y el codigo de confirmacion
+    /*Tomamos ese id para  BUSCAR EL USER POR ID para tener el email y el 
+    codigo de confirmacion.
+    findById query busca por id.*/
     const userDB = await User.findById(id);
 
     /// ------------------> envio el codigo
     const emailEnv = process.env.EMAIL;
     const password = process.env.PASSWORD;
 
+    //Se crea el transporte
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -299,13 +305,14 @@ const sendCode = async (req, res, next) => {
       },
     });
 
+    //Se crean las mismas opciones de envío
     const mailOptions = {
       from: emailEnv,
       to: userDB.email,
       subject: "Confirmation code",
       text: `tu codigo es ${userDB.confirmationCode}, gracias por confiar en nosotros ${userDB.name}`,
     };
-
+    //Se realiza el transport. Si hay error mando un return de 404 con el user y confirm code.
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
         console.log(error);
@@ -313,6 +320,8 @@ const sendCode = async (req, res, next) => {
           user: userDB,
           confirmationCode: "error, resend code",
         });
+
+        //Si no hay error mando un return de 200 con el user y confirm code.
       }
       console.log("Email sent: " + info.response);
       return res.status(200).json({
@@ -325,4 +334,38 @@ const sendCode = async (req, res, next) => {
   }
 };
 
-module.exports = { registerLargo, register, sendCode, registerWithRedirect };
+//!-------------------------------LOG IN------------------------------------------------------------------------------
+const login = async (req, res, next) => {
+  try {
+    // nos traemos
+    const { email, password } = req.body;
+    const userDB = await User.findOne({ email });
+
+    if (userDB) {
+      // comparamos la contrase del body con la del user de la DB
+      if (bcrypt.compareSync(password, userDB.password)) {
+        // si coinciden generamos el token
+        const token = generateToken(userDB._id, email);
+        // mandamos la respuesta con el token
+        return res.status(200).json({
+          user: userDB,
+          token,
+        });
+      } else {
+        return res.status(404).json("password dont match");
+      }
+    } else {
+      return res.status(404).json("User no register");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = {
+  registerLargo,
+  register,
+  sendCode,
+  registerWithRedirect,
+  login,
+};
