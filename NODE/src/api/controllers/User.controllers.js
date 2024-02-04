@@ -3,6 +3,8 @@
 2º Nos traemos el User y el randomCode */
 //!-----------------Middleware-----------------------------------------------
 const { deleteImgCloudinary } = require("../../middleware/files.middleware");
+
+//! ---------------------------- modelos ----------------------------------
 const User = require("../models/User.model");
 
 //! ---------------------------- utils ----------------------------------
@@ -16,6 +18,10 @@ const nodemailer = require("nodemailer");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
+const {
+  setTestEmailSend,
+  getTestEmailSend,
+} = require("../../state/state.data");
 dotenv.config();
 
 /**+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -319,4 +325,4 @@ const sendCode = async (req, res, next) => {
   }
 };
 
-module.exports = { registerLargo };
+module.exports = { registerLargo, register, sendCode, registerWithRedirect };
