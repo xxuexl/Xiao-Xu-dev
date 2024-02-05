@@ -334,34 +334,6 @@ const sendCode = async (req, res, next) => {
   }
 };
 
-//!-------------------------------LOG IN------------------------------------------------------------------------------
-const login = async (req, res, next) => {
-  try {
-    // nos traemos
-    const { email, password } = req.body;
-    const userDB = await User.findOne({ email });
-
-    if (userDB) {
-      // comparamos la contrase del body con la del user de la DB
-      if (bcrypt.compareSync(password, userDB.password)) {
-        // si coinciden generamos el token
-        const token = generateToken(userDB._id, email);
-        // mandamos la respuesta con el token
-        return res.status(200).json({
-          user: userDB,
-          token,
-        });
-      } else {
-        return res.status(404).json("password dont match");
-      }
-    } else {
-      return res.status(404).json("User no register");
-    }
-  } catch (error) {
-    return next(error);
-  }
-};
-
 //! -----------------------------------------------------------------------------
 //? -----------------------RESEND CODE -----------------------------
 //! -----------------------------------------------------------------------------
@@ -508,12 +480,79 @@ const checkNewUser = async (req, res, next) => {
   }
 }; // next es el middleware.
 
+//! -----------------------------------------------------------------------------
+//? --------------------------------LOGIN ---------------------------------------
+//! -----------------------------------------------------------------------------
+
+const login = async (req, res, next) => {
+  try {
+    /* Recibimos por el body el email y password y buscamos
+    que con ese email el User exista, que lo encuentre */
+    const { email, password } = req.body;
+    const userDB = await User.findOne({ email });
+
+    if (userDB) {
+      /*SI existe: 
+      Tenemos password(contraseña NO encriptada) y userDB.password
+      (contraseña encriptada de BD). Se comparan ambas con compareSync. 
+      Bcrypt(encriptar) */
+
+      if (bcrypt.compareSync(password, userDB.password)) {
+        // Si coinciden generamos el token
+        const token = generateToken(userDB._id, email);
+        // Se manda la respuesta con el token
+        return res.status(200).json({
+          user: userDB,
+          token,
+        });
+      } else {
+        //Si no son iguales las contraseñas y se le manda este mensaje.
+        return res.status(404).json("password dont match");
+      }
+    } else {
+      return res.status(404).json("User no register");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+//! -----------------------------------------------------------------------------
+//? --------------------------------AUTOLOGIN ---------------------------------------
+//! -----------------------------------------------------------------------------
+//Compara 2 contraseñas ENCRIPTADAS a diferencia de LOGIN.
+
+const autoLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const userDB = await User.findOne({ email });
+
+    if (userDB) {
+      // Comparo dos contraseñas encriptadas
+      if (password == userDB.password) {
+        const token = generateToken(userDB._id, email);
+        return res.status(200).json({
+          user: userDB,
+          token,
+        });
+      } else {
+        return res.status(404).json("password dont match");
+      }
+    } else {
+      return res.status(404).json("User no register");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   registerLargo,
   register,
   sendCode,
   registerWithRedirect,
-  login,
   resendCode,
   checkNewUser,
+  login,
+  autoLogin,
 };
