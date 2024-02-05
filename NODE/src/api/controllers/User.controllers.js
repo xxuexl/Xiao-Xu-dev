@@ -432,10 +432,11 @@ la Query "findOne" el cual buscará el email de req.body.email. //Mail options*/
 //! ------------------------------------------------------------------------
 //? -------------------------- CHECK NEW USER------------------------------
 //! ------------------------------------------------------------------------
-// Se crea una función arrow asíncrona
+/* Se crea una función arrow asíncrona.
+Se requiere de la req.body el email y código
+ de confirmation(el User nos lo da */
 const checkNewUser = async (req, res, next) => {
   try {
-    //Se requiere de la req.body el email y código de confirmation(el User nos lo da)
     const { email, confirmationCode } = req.body;
     // Existe el User?
     const userExists = await User.findOne({ email });
@@ -444,10 +445,12 @@ const checkNewUser = async (req, res, next) => {
       //!Si no existe----> Enviamos un 404 de que no se encuentra
       return res.status(404).json("User not found");
     } else {
-      /*Necesitamos comprobar si el código que tenemos en el backend coincide con el del 
+      /*Si existe, necesitamos comprobar si el código que tenemos en el backend coincide con el del 
     usuario que recibimos por la req.body. Para ello se realiza esta condicional
     en el que se solicita que han de ser estrictamente iguales*/
       if (confirmationCode === userExists.confirmationCode) {
+        /* Si el code es igual, realizamos una actualización. 
+      Actualizaría el check a true del userExists*/
         try {
           await userExists.updateOne({ check: true });
           /*New query "updateOne" ataca a un elemento en concreto. En este caso solicita
@@ -461,7 +464,7 @@ const checkNewUser = async (req, res, next) => {
           /* Una vez que el User ha sido encontrado se realiza el test.
           Paso un 200 y un test en el runtime. 
           Se le pregunta si el updateUser tiene true a través de un ternario.
-          Si es true, mandará true y si no, mandará false.*/
+          Si es true, mandará el testCheckOk con true y si no, mandará false.*/
           return res.status(200).json({
             testCheckOk: updateUser.check == true ? true : false,
           });
@@ -470,8 +473,9 @@ const checkNewUser = async (req, res, next) => {
         }
       } else {
         try {
-          /* Se introduce el modelo "User" con el método/query "findById...".
-        Si el código está erróneo borrará a ese User de bd y lo mandamos al registro*/
+          /* Si el código no es igual, hacemos un delete que
+          borrará a ese User de la bd.
+          Se introduce el modelo "User" con el método/query "findById...".*/
           await User.findByIdAndDelete(userExists._id);
 
           //También se borrará la image en Cloudinary (añado el path the dicha img)
@@ -502,7 +506,7 @@ const checkNewUser = async (req, res, next) => {
     Este error es específico para este controlador. El crasheo rojo del servidor es un error 500. */
     return next(setError(500, error.message || "General error check code"));
   }
-};
+}; // next es el middleware.
 
 module.exports = {
   registerLargo,
@@ -511,4 +515,5 @@ module.exports = {
   registerWithRedirect,
   login,
   resendCode,
+  checkNewUser,
 };

@@ -6,6 +6,7 @@ const {
   registerWithRedirect,
   resendCode,
   sendCode,
+  checkNewUser,
   login,
 } = require("../controllers/User.controllers");
 const express = require("express"); //require ->Pulls an external package into the project
@@ -18,6 +19,7 @@ UserRoutes.post("/registerLargo", upload.single("image"), registerLargo);
 
 UserRoutes.post("/registerUtil", upload.single("image"), register);
 UserRoutes.post("/register", upload.single("image"), registerWithRedirect);
+UserRoutes.post("/check", checkNewUser);
 UserRoutes.post("/login", login);
 UserRoutes.post("/resend", resendCode);
 /// ------------------> rutas que pueden ser redirect
