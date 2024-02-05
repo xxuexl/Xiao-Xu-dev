@@ -546,6 +546,119 @@ const autoLogin = async (req, res, next) => {
   }
 };
 
+//! -----------------------------------------------------------------------------
+//? -----------------------CONTRASEÑAS Y SUS CAMBIOS-----------------------------
+//! -----------------------------------------------------------------------------
+
+//? -----------------------------------------------------------------------------
+//! ------------------CAMBIO DE CONTRASEÑA CUANDO NO ESTÁS LOGADO---------------
+//? -----------------------------------------------------------------------------
+
+const changePassword = async (req, res, next) => {
+  try {
+    /* Se recibe por body el email y va a comprobar que este User 
+    existe en la BD con .findOne*/
+    const { email } = req.body;
+    console.log(req.body);
+    const userDb = await User.findOne({ email });
+    if (userDb) {
+      // Si existe se hace el redirect con 307 que es el más compatible y no hay cambio de método.
+      const PORT = process.env.PORT;
+      return res.redirect(
+        307, //Aquí se pone el local host, mi puerto y el ID del User.
+        `http://localhost:${PORT}/api/v1/users/sendPassword/${userDb._id}`
+      );
+    } else {
+      //Si User no existe mandamos un 404.
+      return res.status(404).json("User no register");
+    }
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const sendPassword = async (req, res, next) => {
+  try {
+    /*Recibimos por los param el id.
+     Vamos a buscar al User por el Id del param. */
+    const { id } = req.params;
+    const userDb = await User.findById(id);
+    // Realizamos el envío del correo. Traemos de env el email y password. Y creamos el transport.
+    const email = process.env.EMAIL;
+    const password = process.env.PASSWORD;
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: email,
+        pass: password,
+      },
+    });
+
+    /*randomPassword se importa del util con el mismo nombre.
+    Genero la password con las opciones del email y con un mensaje
+    para el User */
+    let passwordSecure = randomPassword();
+    console.log(passwordSecure);
+    const mailOptions = {
+      from: email,
+      to: userDb.email,
+      subject: "-----",
+      text: `User: ${userDb.name}. Your new code login is ${passwordSecure} Hemos enviado esto porque tenemos una solicitud de cambio de contraseña, si no has sido ponte en contacto con nosotros, gracias.`,
+    };
+
+    //Se envía el email con el transporte. Le envío el correo y las opciones del correo.
+    transporter.sendMail(mailOptions, async function (error, info) {
+      if (error) {
+        // SI HAY UN ERROR MANDO UN 404
+        console.log(error);
+        return res.status(404).json("dont send email and dont update user");
+      } else {
+        // SI NO HAY NINGUN ERROR
+        console.log("Email sent: " + info.response);
+        // Se guarda esta contraseña en Mongo db encriptada.
+
+        //1 ) Encriptamos la contraseña con "hashSync" y le damos 10 vueltas.
+        const newPasswordBcrypt = bcrypt.hashSync(passwordSecure, 10);
+
+        try {
+          /* Ponemos id para que busque el User por id y ponemos un objeto con 
+          las cosas que queremos actualizar si lo encuentra. En este caso la password, por 
+          lo que meto la password encriptada.
+          "findById..." lo busca y modifica las claves indicadas, en este caso
+          se le pide que actualice la contraseña hasheada */
+          await User.findByIdAndUpdate(id, { password: newPasswordBcrypt });
+
+          //!------------------ test --------------------------------------------
+          // Se vuelve a buscar el User ya actualizado
+          const userUpdatePassword = await User.findById(id);
+
+          // Hago un compare sync --> Comparación de  una password no encriptada con una encriptada
+          // ---> userUpdatePassword.password ----> encriptada de la BD
+          // ---> passwordSecure -----> contraseña no encriptada, la generada.
+          if (bcrypt.compareSync(passwordSecure, userUpdatePassword.password)) {
+            // Si son iguales es que back se ha actualizado correctamente
+            return res.status(200).json({
+              updateUser: true,
+              sendPassword: true,
+            });
+          } else {
+            /* Si no son iguales se le dice que el correo se mandó 
+            pero que no se ha actualizado el User del back en mongo db. */
+            return res.status(404).json({
+              updateUser: false, //No he actualizado el User
+              sendPassword: true, //Se te ha mandado la password
+            });
+          }
+        } catch (error) {
+          return res.status(404).json(error.message);
+        }
+      }
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   registerLargo,
   register,
