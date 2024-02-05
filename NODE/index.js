@@ -16,14 +16,15 @@ dotenv.config();
 //! conectamos con la base de datos
 connect();
 
-//! ----------------- CONFIGURAR CLOUDINARY--------
+//! -----------------CONFIGURAR CLOUDINARY--------------------
 configCloudinary(); // No olvidar los paréntesis.
 
 //! -----------------VARIABLES CONSTANTES --> PORT
 
 const PORT = process.env.PORT;
 
-//! -----------INSTALAR--CORS-------------
+//! -----------------CORS--------------------------------------
+// Cors está a la entrada.
 const cors = require("cors");
 app.use(cors());
 //Meter configuración general. Del servidor que tiene meteme cors.
@@ -43,7 +44,8 @@ app.use("*", (req, res, next) => {
   return next(error);
 });
 
-//! ------------------> cuando el servidor crachea metemos un 500 ----------
+//! ------------------> En caso de Crash en el servidor metemos un 500 ----------
+//Error general en el servidor
 app.use((error, req, res) => {
   return res
     .status(error.status || 500)

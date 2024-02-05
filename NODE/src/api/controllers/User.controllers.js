@@ -432,27 +432,36 @@ la Query "findOne" el cual buscará el email de req.body.email. //Mail options*/
 //! ------------------------------------------------------------------------
 //? -------------------------- CHECK NEW USER------------------------------
 //! ------------------------------------------------------------------------
-
+// Se crea una función arrow asíncrona
 const checkNewUser = async (req, res, next) => {
   try {
-    //! nos traemos de la req.body el email y codigo de confirmation
+    //Se requiere de la req.body el email y código de confirmation(el User nos lo da)
     const { email, confirmationCode } = req.body;
-
+    // Existe el User?
     const userExists = await User.findOne({ email });
 
     if (!userExists) {
-      //!No existe----> 404 de no se encuentra
+      //!Si no existe----> Enviamos un 404 de que no se encuentra
       return res.status(404).json("User not found");
     } else {
-      // cogemos que comparamos que el codigo que recibimos por la req.body y el del userExists es igual
+      /*Necesitamos comprobar si el código que tenemos en el backend coincide con el del 
+    usuario que recibimos por la req.body. Para ello se realiza esta condicional
+    en el que se solicita que han de ser estrictamente iguales*/
       if (confirmationCode === userExists.confirmationCode) {
         try {
           await userExists.updateOne({ check: true });
+          /*New query "updateOne" ataca a un elemento en concreto. En este caso solicita
+          userExists que actualice la clave check a true*/
 
-          // hacemos un testeo de que este user se ha actualizado correctamente, hacemos un findOne
+          /* Si se ha actualizado algo tengo que volver a buscar el elemento actualizado.
+        Creando updateUser.
+        Se debe de hacer un test. Con "findOne" solicitamos que encuentre 1 por email.*/
           const updateUser = await User.findOne({ email });
 
-          // este finOne nos sirve para hacer un ternario que nos diga si la propiedad vale true o false
+          /* Una vez que el User ha sido encontrado se realiza el test.
+          Paso un 200 y un test en el runtime. 
+          Se le pregunta si el updateUser tiene true a través de un ternario.
+          Si es true, mandará true y si no, mandará false.*/
           return res.status(200).json({
             testCheckOk: updateUser.check == true ? true : false,
           });
@@ -461,31 +470,36 @@ const checkNewUser = async (req, res, next) => {
         }
       } else {
         try {
-          /// En caso dec equivocarse con el codigo lo borramos de la base datos y lo mandamos al registro
+          /* Se introduce el modelo "User" con el método/query "findById...".
+        Si el código está erróneo borrará a ese User de bd y lo mandamos al registro*/
           await User.findByIdAndDelete(userExists._id);
 
-          // borramos la imagen
+          //También se borrará la image en Cloudinary (añado el path the dicha img)
           deleteImgCloudinary(userExists.image);
 
-          // devolvemos un 200 con el test de ver si el delete se ha hecho correctamente
+          // Mando un 200 para confirmar que el User fue borrado.
           return res.status(200).json({
             userExists,
             check: false,
 
-            // test en el runtime sobre la eliminacion de este user
+            /* Se realiza un test(runtime testing) con "delete" en el runtime (a tiempo real).
+            Se solicita que busque ese User con ese id. Si el User es encontrado da
+            la opción "?" que es que ha habido un error en borrar al User.
+            Si no lo encuentras es ":", borrar el User. */
             delete: (await User.findById(userExists._id))
               ? "error delete user"
               : "ok delete user",
           });
         } catch (error) {
-          return res
+          return res //"res" es un middleware de express que siempre está antes de las respuestas
             .status(404)
             .json(error.message || "error general delete user");
-        }
+        } //error.message da más información
       }
     }
   } catch (error) {
-    // siempre en el catch devolvemos un 500 con el error general
+    /* Siempre en el catch devolvemos un 500, error general(Interval server error)
+    Este error es específico para este controlador. El crasheo rojo del servidor es un error 500. */
     return next(setError(500, error.message || "General error check code"));
   }
 };
