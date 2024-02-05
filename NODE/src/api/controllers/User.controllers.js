@@ -252,7 +252,7 @@ const registerWithRedirect = async (req, res, next) => {
         const PORT = process.env.PORT;
         if (userSave) {
           return res.redirect(
-            307, //No hay cambio de método. Método más compatible.
+            303,
             `http://localhost:${PORT}/api/v1/users/register/sendMail/${userSave._id}`
           );
 
@@ -362,10 +362,139 @@ const login = async (req, res, next) => {
   }
 };
 
+//! -----------------------------------------------------------------------------
+//? -----------------------RESEND CODE -----------------------------
+//! -----------------------------------------------------------------------------
+/* Para envíar emails y códigos se necesita la 
+librería "Nodemailer", también nos traemos el email y password
+try -> scope de bloque.  */
+const resendCode = async (req, res, next) => {
+  try {
+    const email = process.env.EMAIL;
+    const password = process.env.PASSWORD;
+    /*Hay que hacer el "transporter" ya que nos permite mandar el 
+correo. Indica el servicio que tiene y la autenticación ara enviar correo.*/
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: email,
+        pass: password,
+      },
+    });
+    /* Se comprueba que User exista. Si no existe no se hace verificación. Se emplea
+la Query "findOne" el cual buscará el email de req.body.email. //Mail options*/
+    const userExists = await User.findOne({ email: req.body.email });
+    // Desde nuestro email al email del req.body.email con asunto de Conf. code junto a texto.
+    if (userExists) {
+      const mailOptions = {
+        from: email,
+        to: req.body.email,
+        subject: "Confirmation code",
+        text: `tu codigo es ${userExists.confirmationCode}`,
+      };
+      /* Siguiente paso: Realizar método "sendMail" en el transporte, 
+    que envía email. 
+    "sendEmail" recibe opciones y contiene una 
+    callback con 2 param (error e info) que se ejecuta dentro de 
+    un función*/
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error); //Se envía la info por console log al front
+          return res.status(404).json({
+            resend: false,
+          });
+          /*Si hay error, retorna 404 como que el resend está en false y 
+          se saca por consola*/
+        } else {
+          console.log("Email sent: " + info.response);
+          return res.status(200).json({
+            resend: true,
+          });
+        }
+      });
+      /*En caso de else se ha enviado correo, en console se manda la info
+          de la respuesta y se envía al front end un código 200 y un resend 
+          que es true*/
+    } else {
+      //Si User not found mandar error 404
+      return res.status(404).json("User not found");
+    }
+    /* El "catch" general se lanza casi siempre con "next". Con "next" se
+  envían cosas que quiero guardar y analizar.
+  Se importa el "setError"el cual recibe el código (500) y el 
+  mensaje (si no hay el "error.message", con operador or emplea el otro) */
+  } catch (error) {
+    return next(setError(500, error.message || "Error general send code"));
+  }
+};
+
+//! ------------------------------------------------------------------------
+//? -------------------------- CHECK NEW USER------------------------------
+//! ------------------------------------------------------------------------
+
+const checkNewUser = async (req, res, next) => {
+  try {
+    //! nos traemos de la req.body el email y codigo de confirmation
+    const { email, confirmationCode } = req.body;
+
+    const userExists = await User.findOne({ email });
+
+    if (!userExists) {
+      //!No existe----> 404 de no se encuentra
+      return res.status(404).json("User not found");
+    } else {
+      // cogemos que comparamos que el codigo que recibimos por la req.body y el del userExists es igual
+      if (confirmationCode === userExists.confirmationCode) {
+        try {
+          await userExists.updateOne({ check: true });
+
+          // hacemos un testeo de que este user se ha actualizado correctamente, hacemos un findOne
+          const updateUser = await User.findOne({ email });
+
+          // este finOne nos sirve para hacer un ternario que nos diga si la propiedad vale true o false
+          return res.status(200).json({
+            testCheckOk: updateUser.check == true ? true : false,
+          });
+        } catch (error) {
+          return res.status(404).json(error.message);
+        }
+      } else {
+        try {
+          /// En caso dec equivocarse con el codigo lo borramos de la base datos y lo mandamos al registro
+          await User.findByIdAndDelete(userExists._id);
+
+          // borramos la imagen
+          deleteImgCloudinary(userExists.image);
+
+          // devolvemos un 200 con el test de ver si el delete se ha hecho correctamente
+          return res.status(200).json({
+            userExists,
+            check: false,
+
+            // test en el runtime sobre la eliminacion de este user
+            delete: (await User.findById(userExists._id))
+              ? "error delete user"
+              : "ok delete user",
+          });
+        } catch (error) {
+          return res
+            .status(404)
+            .json(error.message || "error general delete user");
+        }
+      }
+    }
+  } catch (error) {
+    // siempre en el catch devolvemos un 500 con el error general
+    return next(setError(500, error.message || "General error check code"));
+  }
+};
+
 module.exports = {
   registerLargo,
   register,
   sendCode,
   registerWithRedirect,
   login,
+  resendCode,
 };
