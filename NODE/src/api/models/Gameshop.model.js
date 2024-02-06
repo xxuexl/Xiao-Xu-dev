@@ -21,8 +21,8 @@ const GameShopSchema = new mongoose.Schema(
     type: { type: String, required: true },
     products: [ProductSchema], //el array de products
     favourite: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    year_founded: { type: Number, required: true },
-    headquarters_location: { type: String, required: true },
+    yearFounded: { type: Number, required: true },
+    headquartersLocation: { type: String, required: true },
   },
   {
     timestamps: true,
