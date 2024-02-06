@@ -50,6 +50,7 @@ const isAuthAdmin = async (req, res, next) => {
   try {
     const decoded = verifyToken(token, process.env.JWT_SECRET);
     console.log(decoded);
+    //req.user SOLO SE CREA CON ESTE MIDDLEWARE
     req.user = await User.findById(decoded.id);
     // Se decodifica para crear req.user(user autenticado)
 

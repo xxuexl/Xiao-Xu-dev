@@ -51,8 +51,8 @@ const registerLargo = async (req, res, next) => {
      *Asincronías de lectura - No necesitan que tengan un try catch por cada una de ellas.
      */
 
-    /*Se sincronizan los index(están dentro del modelo de la bd) de los elementos "unique".
-    Sincroniza los index de manera correcta al modelo */
+    //!Se sincronizan los index(están dentro del modelo de la bd) de los elementos "unique".
+    //!Sincroniza los index de manera correcta al modelo */
     await User.syncIndexes(); //A la espera del back,
     let confirmationCode = randomCode(); //Utilizamos el randomCode
     const { email, name } = req.body; /* BODY-  Es el cuerpo
@@ -659,6 +659,21 @@ const sendPassword = async (req, res, next) => {
     return next(error);
   }
 };
+
+//MODIFY PASSWORD.
+/* Vamos a obtener la password antigua y la nueva de la parte 
+de la req.body.
+Tengo que comprobar que sea la misma contraseña que la del
+backend con bcrypt.compareSync.
+La req.user.password es el User autenticado.
+En caso de que sea igual se realiza la actualización.
+
+Se realiza la contraseña y se hashea.
+Si no son iguales, 
+
+Se pone error.message sin el next.
+Con next se puede poner solo (error), next es para guardar datos.
+*/
 
 module.exports = {
   registerLargo,
