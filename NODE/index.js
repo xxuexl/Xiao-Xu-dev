@@ -33,10 +33,18 @@ app.use(cors());
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ limit: "5mb", extended: false }));
 
-//! -----------------> RUTAS
+//! ----------------- RUTAS----------------------------------------------
+
 const UserRoutes = require("./src/api/routes/User.routes");
 app.use("/api/v1/users/", UserRoutes);
-//?--------------------Game Shop routes--------------------------------
+
+//?--------------------Game Shop routes-----------------------------------
+const GameShopRoutes = require("./src/api/routes/Gameshop.routes");
+app.use("/api/v1/gameshop/", GameShopRoutes);
+//Define la url de GameShop, donde todas las rutas se encuentran en el servidor.
+
+const ProductRoutes = require("./src/api/routes/Product.routes");
+app.use("/api/v1/product/", ProductRoutes);
 
 //! -------------------> generamos un error de cuando no see encuentre la ruta
 app.use("*", (req, res, next) => {
