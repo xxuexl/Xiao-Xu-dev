@@ -9,6 +9,8 @@ const {
   checkNewUser,
   login,
   autoLogin,
+  changePassword,
+  sendPassword,
 } = require("../controllers/User.controllers");
 const express = require("express"); //require ->Pulls an external package into the project
 const UserRoutes = express.Router();
@@ -24,11 +26,15 @@ UserRoutes.post("/resend", resendCode);
 UserRoutes.post("/check", checkNewUser);
 UserRoutes.post("/login", login);
 UserRoutes.post("/login/autologin", autoLogin);
-//!UserRoutes.patch("/forgotpassword", changePassword);
+UserRoutes.patch("/forgotpassword", changePassword);
+//patch - modificación parcial de un objeto.
+//frpass llama a sendp.
 
+//! ---------------- endPoints con auth ---------------------------------------
 /// ------------------> rutas que pueden ser redirect
 
 UserRoutes.get("/register/sendMail/:id", sendCode); // :id ---> es el nombre del param
+UserRoutes.patch("/sendPassword/:id", sendPassword);
 module.exports = UserRoutes;
 
 //Configurar la ruta

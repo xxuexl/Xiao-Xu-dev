@@ -11,6 +11,7 @@ const User = require("../models/User.model");
 const randomCode = require("../../utils/randomCode");
 const sendEmail = require("../../utils/sendEmail");
 const { generateToken } = require("../../utils/token");
+const randomPassword = require("../../utils/randomPassword");
 //! ------------------------------librerias--------------------------------
 //Vamos a utilizar librerias: Validator, Nodemeailer par mandar correo electrónicos y bcrypt:
 
@@ -668,4 +669,6 @@ module.exports = {
   checkNewUser,
   login,
   autoLogin,
+  changePassword,
+  sendPassword,
 };
