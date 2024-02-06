@@ -1,3 +1,4 @@
+// Se importa el modelo
 const GameShop = require("../models/Gameshop.model");
 
 //? -------------------------------POST create --------------------------
@@ -7,7 +8,7 @@ const createGameShop = async (req, res, next) => {
     await GameShop.syncIndexes();
     // Hace que los Indexes de este esquema GameShop existan en Mongo DB
 
-    /* hacemos una instancia del modelo, el cuerpo de la request. 
+    /* Hacemos una instancia del modelo, el cuerpo de la request. 
     Se crea un nuevo object el customBody.
     1º Si en el request body está presente name, se le pide guardarlo dentro 
     de la clave name, y así con todas las demás claves */

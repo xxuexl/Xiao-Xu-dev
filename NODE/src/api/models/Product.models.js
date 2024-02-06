@@ -12,8 +12,8 @@ const ProductSchema = new mongoose.Schema(
     genre: { type: String, required: true },
     platforms: [PlatformSchema], //El array que representa en cuántas platforms está el juego.
     price: { type: Number, required: true },
-    game_studio: { type: String, required: true },
-    year_released: { type: Number, required: true },
+    gameStudio: { type: String, required: true },
+    yearReleased: { type: Number, required: true },
     favourite: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
