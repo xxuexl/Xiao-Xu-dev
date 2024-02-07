@@ -34,7 +34,7 @@ const createMovie = async (req, res, next) => {
 };
 
 //! ---------------------------------------------------------------------
-//? ----------------------------add o delete un character  --------------
+//? ---------------------------ADD & DELETE CHARACTERS-------------------
 //! ---------------------------------------------------------------------
 
 // Metemos los personajes en el array del modelo de "Movie"
@@ -58,7 +58,8 @@ const toggleCharacter = async (req, res, next) => {
 
       const arrayIdCharacters = characters.split(",");
 
-      /** Promise.all --> Completa todas las promesas y asincronías que tiene
+      /** Promise.all --> Conjunto de promesas.
+       *  Completa todas las promesas y asincronías que tiene
        * dentro y luego continúa con el proceso.
        * Se recorre este array de los Id de los Characters que hemos creado
        * y se comprueba si...
@@ -153,4 +154,4 @@ const toggleCharacter = async (req, res, next) => {
   }
 };
 
-module.exports = { createMovie };
+module.exports = { createMovie, toggleCharacter };
