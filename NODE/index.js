@@ -38,6 +38,14 @@ app.use(express.urlencoded({ limit: "5mb", extended: false }));
 const UserRoutes = require("./src/api/routes/User.routes");
 app.use("/api/v1/user/", UserRoutes);
 
+//P has user in plural.
+
+const CharacterRoutes = require("./src/api/routes/Character.routes");
+app.use("/api/v1/characters/", CharacterRoutes);
+
+const MovieRoutes = require("./src/api/routes/Movie.routes");
+app.use("/api/v1/movies/", MovieRoutes);
+
 //?--------------------Game Shop routes-----------------------------------
 const GameShopRoutes = require("./src/api/routes/Gameshop.routes");
 app.use("/api/v1/gameshop/", GameShopRoutes);
