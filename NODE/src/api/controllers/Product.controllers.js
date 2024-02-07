@@ -1,9 +1,13 @@
+const { deleteImgCloudinary } = require("../../middleware/files.middleware");
 // Se importa el modelo
 const Product = require("../models/Product.model");
 
 //? -------------------------------POST create --------------------------
 
+//Proporciona el url de donde se encuentra la img en Cloudinary.
+
 const createProduct = async (req, res, next) => {
+  let catchImg = req.file?.path;
   try {
     await Product.syncIndexes();
     // Hace que los Indexes de este esquema Product existan en Mongo DB
@@ -39,6 +43,7 @@ const createProduct = async (req, res, next) => {
       .status(savedProduct ? 200 : 404)
       .json(savedProduct ? savedProduct : "Error creating the Product");
   } catch (error) {
+    deleteImgCloudinary(catchImg);
     return res.status(404).json({
       error: "Error catch creating the Product",
       message: error.message, // Comunica info sobre el error que se capturó

@@ -1,3 +1,5 @@
+const { upload } = require("../../middleware/files.middleware");
+
 //Importamos createGameShop de controllers
 const { createGameShop } = require("../controllers/Gameshop.controllers");
 
@@ -5,7 +7,7 @@ const { createGameShop } = require("../controllers/Gameshop.controllers");
 const GameShopRoutes = require("express").Router();
 
 //Genero el endpoint para el API
-GameShopRoutes.post("/", createGameShop);
+GameShopRoutes.post("/create", upload.single("image"), createGameShop);
 
 //Realizo la exportación
 module.exports = GameShopRoutes;
