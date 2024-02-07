@@ -1,5 +1,6 @@
+// Se importa el modelo y middleware de Img
+
 const { deleteImgCloudinary } = require("../../middleware/files.middleware");
-// Se importa el modelo
 const GameShop = require("../models/Gameshop.model");
 
 //? -------------------------------POST create --------------------------
@@ -10,7 +11,8 @@ const createGameShop = async (req, res, next) => {
     await GameShop.syncIndexes();
     // Hace que los Indexes de este esquema GameShop existan en Mongo DB
 
-    /* Hacemos una instancia del modelo, el cuerpo de la request. 
+    /*  OLD VERSION NO WORKING WITH IMG
+     Hacemos una instancia del modelo, el cuerpo de la request. 
     Se crea un nuevo object el customBody.
     1º Si en el request body está presente name, se le pide guardarlo dentro 
     de la clave name, y así con todas las demás claves */
@@ -22,9 +24,10 @@ const createGameShop = async (req, res, next) => {
       yearFounded: req.body?.yearFounded,
       headquartersLocation: req.body?.headquartersLocation,
     };*/
+
     const newGameShop = new GameShop({ ...req.body, image: catchImg });
     /*Creo un nuevo modelo usando el template de GameShop y le paso
-    todo el cuerpo del request del customBody*/
+    todo el cuerpo del request del body e img*/
 
     const savedGameShop = await newGameShop.save();
     /* Empleo el save method del nuevo modelo de GameShop para guardar toda

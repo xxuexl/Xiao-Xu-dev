@@ -1,5 +1,6 @@
+// Se importa el modelo y middleware de Img
+
 const { deleteImgCloudinary } = require("../../middleware/files.middleware");
-// Se importa el modelo
 const Product = require("../models/Product.model");
 
 //? -------------------------------POST create --------------------------
@@ -12,9 +13,10 @@ const createProduct = async (req, res, next) => {
     await Product.syncIndexes();
     // Hace que los Indexes de este esquema Product existan en Mongo DB
 
-    /* Hacemos el cuerpo de la request. Se crea un nuevo object el customBody.
+    /* OLD VERSION NO WORKING WITH IMG
+    Hacemos el cuerpo de la request. Se crea un nuevo object el customBody.
     1º Si en el request body está presente name, se le pide guardarlo dentro 
-    de la clave name, y así con todas las demás claves */
+    de la clave name, y así con todas las demás claves 
     const customBody = {
       name: req.body?.name,
       genre: req.body?.genre,
@@ -23,10 +25,11 @@ const createProduct = async (req, res, next) => {
       gameStudio: req.body?.gameStudio,
       yearReleased: req.body?.yearReleased,
       favourite: req.body?.favourite,
-    };
-    const newProduct = new Product(customBody);
+    }; */
+
+    const newProduct = new Product({ ...req.body, image: catchImg });
     /*Creo un nuevo modelo usando el template de Product y le paso
-    todo el cuerpo del request del customBody*/
+    todo el cuerpo del request del body e img*/
 
     const savedProduct = await newProduct.save();
     /* Empleo el save method del nuevo modelo de Product para guardar toda

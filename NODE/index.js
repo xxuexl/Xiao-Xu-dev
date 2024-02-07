@@ -46,7 +46,7 @@ app.use("/api/v1/gameshop/", GameShopRoutes);
 const ProductRoutes = require("./src/api/routes/Product.routes");
 app.use("/api/v1/product/", ProductRoutes);
 
-//! -------------------> generamos un error de cuando no see encuentre la ruta
+//! -------------------> generamos un error de cuando no se encuentre la ruta
 app.use("*", (req, res, next) => {
   const error = new Error("Route not found");
   error.status = 404;

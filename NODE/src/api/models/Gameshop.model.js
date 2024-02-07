@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-//const cloudinary = require("cloudinary");
 
 /* Schema --> Es como un template en una base de datos.
 Es una colección lógica organizada de objetos de base de datos como
@@ -15,6 +14,8 @@ claves y atributos. */
 const ProductSchema = new mongoose.Schema({ name: String });
 //Define el esquema del producto, a través de un array String.
 
+/* Creo un nuevo Schema del producto(videojuego) con la librería mongoose 
+que interactúa con Mongo DB. */
 const GameShopSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
