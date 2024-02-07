@@ -24,6 +24,7 @@ const {
   setTestEmailSend,
   getTestEmailSend,
 } = require("../../state/state.data");
+const setError = require("../../helpers/handle-error");
 dotenv.config();
 
 /**+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -568,7 +569,7 @@ const changePassword = async (req, res, next) => {
       const PORT = process.env.PORT;
       return res.redirect(
         307, //Aquí se pone el local host, mi puerto y el ID del User.
-        `http://localhost:${PORT}/api/v1/users/sendPassword/${userDb._id}`
+        `http://localhost:${PORT}/api/v1/user/sendPassword/${userDb._id}`
       );
     } else {
       //Si User no existe mandamos un 404.
@@ -677,39 +678,45 @@ Con next se puede poner solo (error), next es para guardar datos.
 */
 
 //? -----------------------------------------------------------------------------
-//! ------------------CAMBIO DE CONTRASEÑA CUANDO YA SE ESTA ESTA LOGADO---------
+//! ------------------CAMBIO DE CONTRASEÑA CUANDO YA ESTÁ LOGADO---------
 //? -----------------------------------------------------------------------------
 
 const modifyPassword = async (req, res, next) => {
-  /** IMPORTANTE ---> REQ.USER ----> LO CREAR LOS AUTH MIDDLEWARE */
+  /* IMPORTANT: REQ.USER ----> ES CREADO POR LOS AUTH MIDDLEWARE */
   console.log("req.user", req.user);
 
   try {
-    const { password, newPassword } = req.body;
+    const { password, newPassword } = req.body; // Se obtienen la nueva y antigua contraseña de req.body
     const { _id } = req.user;
 
-    /** comparamos la contrasela vieja sin encriptar y la encriptada */
+    /* Se compara la old password sin encriptar y la encriptada con "compareSync" */
     if (bcrypt.compareSync(password, req.user.password)) {
-      /** tenemos que encriptar la contraseña para poder guardarla en el back mongo db */
+      /* Hay que encriptar la contraseña para guardarla en el backend
+      de Mongo DB. Con bcrypt se hashea. */
       const newPasswordHashed = bcrypt.hashSync(newPassword, 10);
 
-      /** vamos a actualizar la contraseña en mongo db */
+      /* Se actualiza la contraseña en Mongo DB tras hashearla. */
       try {
+        /* Se hace con await porque es asíncrono. Se mete el modelo User,
+        la query "find..." y se mete el id del User que quiero actualizar.
+        
+        Pongo una , y un object con la clave a modificar, en este caso se pide
+       que la password se actualice a la nueva password hasheada. */
         await User.findByIdAndUpdate(_id, { password: newPasswordHashed });
 
-        /** TESTING EN TIEMPO REAL  */
+        //?---------TESTING EN TIEMPO REAL---------------------------------------------
 
-        //1) Traemos el user actualizado
+        //1) Buscamos y traemos el user actualizado con ·findById"
         const userUpdate = await User.findById(_id);
 
-        // 2) vamos a comparar la contraseña sin encriptar y la tenemos en el back que esta encriptada
+        // 2) Se compara la contraseña sin encriptar con la del backend encriptada con bcrypt.compareSync
         if (bcrypt.compareSync(newPassword, userUpdate.password)) {
-          /// SI SON IGUALES 200 ---> UPDATE OK
+          // SI SON IGUALES 200 ---> UPDATE OK
           return res.status(200).json({
             updateUser: true,
           });
         } else {
-          ///NO SON IGUALES -------> 404 no son iguales
+          // NO SON IGUALES --> 404 diciendo que updateUser no son iguales
           return res.status(404).json({
             updateUser: false,
           });
@@ -718,14 +725,14 @@ const modifyPassword = async (req, res, next) => {
         return res.status(404).json(error.message);
       }
     } else {
-      /** si las contraseñas no son iguales le mando un 404 diciendo que las contraseñas no son iguales */
+      // Si contraseñas no son iguales, mando un 404 comunicándolo.
       return res.status(404).json("password dont match");
     }
   } catch (error) {
     return next(error);
-    /**
+    /* Segunda opción :
      * return next(
-      setError(
+       setError(
         500,
         error.message || 'Error general to ChangePassword with AUTH'
       )
