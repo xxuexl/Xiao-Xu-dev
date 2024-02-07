@@ -1,5 +1,13 @@
-/*
+const enumOk = (gender) => {
+  const enumGender = ["hombre", "mujer", "otros"];
+  if (enumGender.includes(gender)) {
+    console.log("entro en el true");
+    return { check: true, gender };
+  } else {
+    return {
+      check: false,
+    };
+  }
+};
 
-No está dentro de enum
-
- */
+module.exports = enumOk;
