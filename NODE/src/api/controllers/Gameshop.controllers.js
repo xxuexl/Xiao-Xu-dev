@@ -180,10 +180,10 @@ const getById = async (req, res, next) => {
 
 const getAll = async (req, res, next) => {
   try {
-    const allGameShop = await GameShop.find().populate("movies");
+    const allGameShops = await GameShop.find().populate("products");
     /** el find nos devuelve un array */
-    if (allGameShop.length > 0) {
-      return res.status(200).json(allGameShop);
+    if (allGameShops.length > 0) {
+      return res.status(200).json(allGameShops);
     } else {
       return res.status(404).json("no se han encontrado gameShops");
     }
@@ -355,4 +355,4 @@ const deleteGameShop = async (req, res, next) => {
   }
 };
 
-module.exports = { createGameShop, toggleProduct, getById };
+module.exports = { createGameShop, toggleProduct, getById, getAll, getByName };
