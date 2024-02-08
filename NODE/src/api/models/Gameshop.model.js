@@ -11,7 +11,7 @@ Creamos un nuevo Schema de empresas/tiendas que venden productos
 Tiene una nueva función a la que le pasamos un objeto con diferentes 
 claves y atributos. */
 
-const ProductSchema = new mongoose.Schema({ name: String });
+const ProductSchema = new mongoose.Schema({ name: String }); //!Puede ser que por esto  no haga link?
 //Define el esquema del producto, a través de un array String.
 
 /* Creo un nuevo Schema del producto(videojuego) con la librería mongoose 
@@ -28,7 +28,7 @@ const GameShopSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    Product: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    Product: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }], //!Lo necesito?
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
 
