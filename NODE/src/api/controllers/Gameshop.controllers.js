@@ -72,18 +72,14 @@ const toggleProduct = async (req, res, next) => {
     /* Se hace un condicional para saber si existe.
      Se hace la update, si no, mandamos un 404 */
     if (GameShopById) {
-      /** El método "split" separa por las comas El string de req.body.
-       * de la parte superior. "split" creará un array con los Id.  */
-
-      const arrayIdProducts = products.split(",");
-
       /** Promise.all --> Conjunto de promesas.
        *  Completa todas las promesas y asincronías que tiene
        * dentro y luego continúa con el proceso.
        * Se recorre este array de los Id de los products*/
-
+      //! YO NO NECESITO EMPLEAR SPLIT PORQUE YO TENGO PRODUCTS(REQ.BODY) COMO UN ARRAY.
       Promise.all(
-        arrayIdProducts.map(async (product, index) => {
+        products.map(async (product, index) => {
+          //! PONGO PRODUCTS EN SU LUGAR Y HAGO UN MAP, BUSCA EN UN ARRAY.
           if (GameShopById.products.includes(product)) {
             /*Se borra con findByIdAndUpdate.Se le pasa el Id y se le solicita
             que saque (pull) del array products*/
