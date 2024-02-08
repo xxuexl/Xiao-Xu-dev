@@ -158,4 +158,201 @@ const toggleProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { createGameShop, toggleProduct };
+//! ---------------------------------------------------------------------
+//? -------------------------------get by id --------------------------
+//! ---------------------------------------------------------------------
+const getById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const gameShopById = await GameShop.findById(id);
+    if (gameShopById) {
+      return res.status(200).json(gameShopById);
+    } else {
+      return res.status(404).json("no se ha encontrado el gameShop");
+    }
+  } catch (error) {
+    return res.status(404).json(error.message);
+  }
+};
+//! ---------------------------------------------------------------------
+//? -------------------------------get all ------------------------------
+//! ---------------------------------------------------------------------
+
+const getAll = async (req, res, next) => {
+  try {
+    const allGameShop = await GameShop.find().populate("movies");
+    /** el find nos devuelve un array */
+    if (allGameShop.length > 0) {
+      return res.status(200).json(allGameShop);
+    } else {
+      return res.status(404).json("no se han encontrado gameShops");
+    }
+  } catch (error) {
+    return res.status(404).json({
+      error: "error al buscar - lanzado en el catch",
+      message: error.message,
+    });
+  }
+};
+
+//! ---------------------------------------------------------------------
+//? -------------------------------get by name --------------------------
+//! ---------------------------------------------------------------------
+const getByName = async (req, res, next) => {
+  try {
+    const { name } = req.params;
+
+    /// nos devuelve un array de elementos
+    const gameShopByName = await GameShop.find({ name });
+    if (gameShopByName.length > 0) {
+      return res.status(200).json(gameShopByName);
+    } else {
+      return res.status(404).json("no se ha encontrado");
+    }
+  } catch (error) {
+    return res.status(404).json({
+      error: "error al buscar por nombre capturado en el catch",
+      message: error.message,
+    });
+  }
+};
+
+//! ---------------------------------------------------------------------
+//? -------------------------------UPDATE -------------------------------
+//! ---------------------------------------------------------------------
+
+const update = async (req, res, next) => {
+  await GameShop.syncIndexes();
+  let catchImg = req.file?.path;
+  try {
+    const { id } = req.params;
+    const gameShopById = await GameShop.findById(id);
+    if (gameShopById) {
+      const oldImg = gameShopById.image;
+
+      const customBody = {
+        _id: gameShopById._id,
+        image: req.file?.path ? catchImg : oldImg,
+        name: req.body?.name ? req.body?.name : gameShopById.name,
+      };
+
+      if (req.body?.gender) {
+        const resultEnum = enumOk(req.body?.gender);
+        customBody.gender = resultEnum.check
+          ? req.body?.gender
+          : gameShopById.gender;
+      }
+
+      try {
+        await GameShop.findByIdAndUpdate(id, customBody);
+        if (req.file?.path) {
+          deleteImgCloudinary(oldImg);
+        }
+
+        //** ------------------------------------------------------------------- */
+        //** VAMOS A TESTEAR EN TIEMPO REAL QUE ESTO SE HAYA HECHO CORRECTAMENTE */
+        //** ------------------------------------------------------------------- */
+
+        // ......> VAMOS A BUSCAR EL ELEMENTO ACTUALIZADO POR ID
+
+        const gameShopByIdUpdate = await GameShop.findById(id);
+
+        // ......> me cojer el req.body y vamos a sacarle las claves para saber que elementos nos ha dicho de actualizar
+        const elementUpdate = Object.keys(req.body);
+
+        /** vamos a hacer un objeto vacion donde meteremos los test */
+
+        let test = {};
+
+        /** vamos a recorrer las claves del body y vamos a crear un objeto con los test */
+
+        elementUpdate.forEach((item) => {
+          if (req.body[item] === gameShopByIdUpdate[item]) {
+            test[item] = true;
+          } else {
+            test[item] = false;
+          }
+        });
+
+        if (catchImg) {
+          gameShopByIdUpdate.image === catchImg
+            ? (test = { ...test, file: true })
+            : (test = { ...test, file: false });
+        }
+
+        /** vamos a ver que no haya ningun false. Si hay un false lanzamos un 404,
+         * si no hay ningun false entonces lanzamos un 200 porque todo esta correcte
+         */
+
+        let acc = 0;
+        for (clave in test) {
+          test[clave] == false && acc++;
+        }
+
+        if (acc > 0) {
+          return res.status(404).json({
+            dataTest: test,
+            update: false,
+          });
+        } else {
+          return res.status(200).json({
+            dataTest: test,
+            update: true,
+          });
+        }
+      } catch (error) {}
+    } else {
+      return res.status(404).json("este gameShop no existe");
+    }
+  } catch (error) {
+    return res.status(404).json(error);
+  }
+};
+
+//! ---------------------------------------------------------------------
+//? -------------------------------DELETE -------------------------------
+//! ---------------------------------------------------------------------
+
+const deleteGameShop = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const gameShop = await GameShop.findByIdAndDelete(id);
+    if (gameShop) {
+      // lo buscamos para vr si sigue existiendo o no
+      const finByIdGameShop = await GameShop.findById(id);
+
+      try {
+        const test = await Movie.updateMany(
+          { gameShops: id },
+          { $pull: { gameShops: id } }
+        );
+        console.log(test);
+
+        try {
+          await User.updateMany(
+            { gameShopsFav: id },
+            { $pull: { gameShopsFav: id } }
+          );
+
+          return res.status(finByIdGameShop ? 404 : 200).json({
+            deleteTest: finByIdGameShop ? false : true,
+          });
+        } catch (error) {
+          return res.status(404).json({
+            error: "error catch update User",
+            message: error.message,
+          });
+        }
+      } catch (error) {
+        return res.status(404).json({
+          error: "error catch update Movie",
+          message: error.message,
+        });
+      }
+    }
+  } catch (error) {
+    return res.status(404).json(error.message);
+  }
+};
+
+module.exports = { createGameShop, toggleProduct, getById };

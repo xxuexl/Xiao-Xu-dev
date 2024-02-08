@@ -20,3 +20,5 @@ CharacterRoutes.patch("/:id", upload.single("image"), update);
 CharacterRoutes.delete("/:id", deleteCharacter);
 
 module.exports = CharacterRoutes;
+
+//ok
