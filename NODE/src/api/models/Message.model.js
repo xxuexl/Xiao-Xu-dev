@@ -12,20 +12,24 @@ const Schema = mongoose.Schema;
 // ------------> definimos otras propiedades que limitan la informacion que se puede incluir en esa clave
 // ------------> que sea requerido, una longitud maxima y minima, etc etc
 
-const CharacterSchema = new Schema(
+const MenssageSchema = new Schema(
   {
-    name: { type: String, required: false, unique: false },
-    gender: {
+    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    type: {
       type: String,
-      enum: ["hombre", "mujer", "otros"],
-      required: false,
+      enum: ["private", "public"],
+      required: true,
     },
-    image: {
+    content: {
       type: String,
-      required: false,
+      required: true,
     },
-    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }],
-    movies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Movie" }],
+    recipientCharacter: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Character",
+    },
+    recipientMovie: { type: mongoose.Schema.Types.ObjectId, ref: "Movie" },
+    recipientUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
@@ -35,8 +39,8 @@ const CharacterSchema = new Schema(
 
 //! -------- con la definicion de datos y su esquema vamos a crear el modelo de datos
 
-const Character = mongoose.model("Character", CharacterSchema);
+const Menssage = mongoose.model("Menssage", MenssageSchema);
 
 //! -------- exportar el modelo para que lo utilicen los controladores
 
-module.exports = Character;
+module.exports = Menssage;
