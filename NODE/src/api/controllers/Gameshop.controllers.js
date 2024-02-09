@@ -1,8 +1,10 @@
 // Se importa el modelo y middleware de Img
 
 const { deleteImgCloudinary } = require("../../middleware/files.middleware");
+//const enumOk = require("../../utils/enumOk");
 const Product = require("../models/Product.model");
 const GameShop = require("../models/Gameshop.model");
+const User = require("../models/User.model");
 
 //? -------------------------------POST create --------------------------
 
@@ -220,7 +222,7 @@ const getByName = async (req, res, next) => {
 //! ---------------------------------------------------------------------
 //? -------------------------------UPDATE -------------------------------
 //! ---------------------------------------------------------------------
-
+//TODO
 const update = async (req, res, next) => {
   await GameShop.syncIndexes();
   let catchImg = req.file?.path;
@@ -319,10 +321,10 @@ const deleteGameShop = async (req, res, next) => {
     const gameShop = await GameShop.findByIdAndDelete(id);
     if (gameShop) {
       // lo buscamos para vr si sigue existiendo o no
-      const finByIdGameShop = await GameShop.findById(id);
+      const findByIdGameShop = await GameShop.findById(id);
 
       try {
-        const test = await Movie.updateMany(
+        const test = await Product.updateMany(
           { gameShops: id },
           { $pull: { gameShops: id } }
         );
@@ -334,8 +336,8 @@ const deleteGameShop = async (req, res, next) => {
             { $pull: { gameShopsFav: id } }
           );
 
-          return res.status(finByIdGameShop ? 404 : 200).json({
-            deleteTest: finByIdGameShop ? false : true,
+          return res.status(findByIdGameShop ? 404 : 200).json({
+            deleteTest: findByIdGameShop ? false : true,
           });
         } catch (error) {
           return res.status(404).json({
@@ -345,7 +347,7 @@ const deleteGameShop = async (req, res, next) => {
         }
       } catch (error) {
         return res.status(404).json({
-          error: "error catch update Movie",
+          error: "error catch update Product",
           message: error.message,
         });
       }
@@ -355,4 +357,11 @@ const deleteGameShop = async (req, res, next) => {
   }
 };
 
-module.exports = { createGameShop, toggleProduct, getById, getAll, getByName };
+module.exports = {
+  createGameShop,
+  toggleProduct,
+  getById,
+  getAll,
+  getByName,
+  deleteGameShop,
+};

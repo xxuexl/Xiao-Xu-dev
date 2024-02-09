@@ -59,6 +59,8 @@ const UserSchema = new mongoose.Schema(
       type: String,
     }, //Subimos texto al backend, a cloudinary subimos una url y luego pasa a mongoose.
     // cuando relacionamos un modelo de con otro lo hacemos con populate y el ref a otro modelo
+    gameShopsFav: [{ type: mongoose.Schema.Types.ObjectId, ref: "Gameshop" }],
+    productsFav: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
   {
     timestamps: true,

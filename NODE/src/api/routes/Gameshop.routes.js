@@ -7,6 +7,7 @@ const {
   getById,
   getAll,
   getByName,
+  deleteGameShop,
 } = require("../controllers/Gameshop.controllers");
 
 //Creo una nueva ruta para GameShop
@@ -18,6 +19,7 @@ GameShopRoutes.get("/:id", getById);
 GameShopRoutes.get("/", getAll);
 GameShopRoutes.get("/byName/:name", getByName);
 GameShopRoutes.patch("/add/:id", toggleProduct);
+GameShopRoutes.delete("/:id", deleteGameShop);
 
 //Realizo la exportación
 module.exports = GameShopRoutes;
