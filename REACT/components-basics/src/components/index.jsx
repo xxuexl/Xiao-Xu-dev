@@ -1,6 +1,8 @@
 import Title from "./Title/Title";
-import Counter from "./Counter/Counter";
-import Form from "./Form/Form";
-export { Title, Counter, Form };
+import SubTitle from "./SubTitle/SubTitle";
+import Image from "./Image/Image";
+import Paragraph from "./Paragraph/Paragraph";
+
+export { Title, SubTitle, Image, Paragraph };
 
 //In progress

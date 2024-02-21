@@ -1,5 +1,5 @@
 import './App.css'
-
+import { Title, SubTitle, Image, Paragraph } from "./components"
 
 /*1. Crea una aplicación de ReactJS con vite → name: components-basics.
 2. Crea tu carpeta de `components` dentro de `src`.
@@ -11,5 +11,15 @@ import './App.css'
 4. Estila cada uno de ellos haciendo uso de CSS Modules → hoja de estilo asociada al componente.
 Comprueba que la visualización es correcta. */
   
+const App = () => {
+    return (
+    <div>
+    <Title/>
+    <SubTitle/>
+    <Image/>
+    <Paragraph/>
+     </div> 
+    );
+};
 
-//export default App
+export default App;
